@@ -1,6 +1,6 @@
 import fs from "fs";
 
-export class FileWriter {
+export default class FileWriter {
   path: string;
   data: string;
 

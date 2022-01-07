@@ -1,6 +1,6 @@
 type ParserFunc = (data: any) => { [key: string]: string }[];
 
-export class CSVMaker {
+export default class CSVMaker {
   parserFunc: (data: any) => ParserFunc;
   data: any[];
 

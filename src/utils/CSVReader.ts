@@ -1,7 +1,7 @@
 import csvtojson from "csvtojson";
 
 type ParsedJsonFromCSV = { [key: string]: string }[];
-export class CSVReader {
+export default class CSVReader {
   path: string;
 
   constructor(path) {
