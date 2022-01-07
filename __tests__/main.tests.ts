@@ -1,11 +1,11 @@
 import Booking, { FareClass, FirstName, PNR } from "../src/models/Booking";
-import Validator from "../src/models/Validator";
+import Validator from "../src/utils/Validator";
 import { BookingCSVRow } from "../src/models/BookingCSV";
-import { CSVReader } from "../src/models/CSVReader";
-import { InvalidBooking } from "../src/models/InvalidBooking";
-import { BookingWithDiscount } from "../src/models/BookingWithDiscount";
-import { CSVMaker } from "../src/models/CSVMaker";
-import { FileWriter } from "../src/models/FileWriter";
+import CSVReader from "../src/utils/CSVReader";
+import InvalidBooking from "../src/models/InvalidBooking";
+import BookingWithDiscount from "../src/models/BookingWithDiscount";
+import CSVMaker from "../src/utils/CSVMaker";
+import FileWriter from "../src/utils/FileWriter";
 
 const inputFilePath = "./input/bookings.csv";
 

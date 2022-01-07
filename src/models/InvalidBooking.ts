@@ -1,6 +1,6 @@
 import Booking from "./Booking";
 
-export class InvalidBooking {
+export default class InvalidBooking {
   booking: Booking;
   invalidReasons: string[];
   constructor(booking: Booking, invalidReasons: string[]) {

@@ -1,6 +1,6 @@
 import Booking from "./Booking";
 
-export class BookingWithDiscount {
+export default class BookingWithDiscount {
   static FARE_CLASS_DISCOUNT_CODE_MAPPING: { [key: string]: string } = {
     A: "OFFER_20",
     B: "OFFER_20",
