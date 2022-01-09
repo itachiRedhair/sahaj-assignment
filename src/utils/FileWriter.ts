@@ -1,8 +1,8 @@
 import fs from "fs";
 
 export default class FileWriter {
-  path: string;
-  data: string;
+  private path: string;
+  private data: string;
 
   constructor(data, path) {
     this.data = data;

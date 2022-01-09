@@ -1,29 +1,29 @@
-import { Field, FieldValidator } from "./Field";
+import { Field, EmailValidator, PhoneValidator, PNRValidator, TicketingDateValidator, CabinValidator } from "./Field";
 
 export interface BookingData {
-  firstName: FirstName;
-  // lastName: Field;
-  pnr: PNR;
-  fareClass: Field;
-  // travelDate: Field;
-  // pax: Field;
-  // ticketingDate: Field;
-  // email: Field;
-  // phone: Field;
-  // cabin: Field;
+  firstName: string;
+  lastName: string;
+  pnr: string;
+  fareClass: string;
+  travelDate: string;
+  pax: string;
+  ticketingDate: string;
+  email: string;
+  phone: string;
+  cabin: string;
 }
 
 export default class Booking {
-  firstName: FirstName;
-  // lastName: Field;
-  pnr: PNR;
-  fareClass: FareClass;
-  // travelDate: Field;
-  // pax: Field;
-  // ticketingDate: Field;
-  // email: Field;
-  // phone: Field;
-  // cabin: Field;
+  firstName: Field;
+  lastName: Field;
+  pnr: Field;
+  fareClass: Field;
+  travelDate: Field;
+  pax: Field;
+  ticketingDate: Field;
+  email: Field;
+  phone: Field;
+  cabin: Field;
 
   static CABIN_TYPES = {
     ECONOMY: "Economy",
@@ -33,42 +33,18 @@ export default class Booking {
   };
 
   constructor(bookingData: BookingData) {
-    this.firstName = bookingData.firstName;
-    // this.lastName = bookingData.lastName;
-    this.pnr = bookingData.pnr;
-    this.fareClass = bookingData.fareClass;
-    // this.travelDate = bookingData.travelDate;
-    // this.pax = bookingData.pax;
-    // this.ticketingDate = bookingData.ticketingDate;
-    // this.email = bookingData.email;
-    // this.phone = bookingData.phone;
-    // this.cabin = bookingData.cabin;
-  }
-}
-
-export class FirstName extends Field {
-  constructor(value: string) {
-    super(value);
-  }
-}
-
-export class PNR extends Field {
-  static validator: FieldValidator = (value) => {
-    const regexPattern = /^[A-Z0-9]{6}$/g;
-    if (regexPattern.test(value as string)) {
-      return { valid: true };
-    } else {
-      return { valid: false, invalidReason: "Invalid pnr" };
-    }
-  };
-
-  constructor(value: string) {
-    super(value, PNR.validator);
-  }
-}
-
-export class FareClass extends Field {
-  constructor(value: string) {
-    super(value);
+    this.firstName = new Field(bookingData.firstName);
+    this.lastName = new Field(bookingData.firstName);
+    this.email = new Field(bookingData.email, new EmailValidator());
+    this.pnr = new Field(bookingData.pnr, new PNRValidator());
+    this.fareClass = new Field(bookingData.fareClass);
+    this.travelDate = new Field(new Date(bookingData.travelDate));
+    this.pax = new Field(bookingData.pax);
+    this.ticketingDate = new Field(
+      new Date(bookingData.ticketingDate),
+      new TicketingDateValidator(this.travelDate.value as Date)
+    );
+    this.phone = new Field(bookingData.phone, new PhoneValidator());
+    this.cabin = new Field(bookingData.cabin, new CabinValidator());
   }
 }

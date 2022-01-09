@@ -1,8 +1,8 @@
 type ParserFunc = (data: any) => { [key: string]: string }[];
 
 export default class CSVMaker {
-  parserFunc: (data: any) => ParserFunc;
-  data: any[];
+  private parserFunc: ParserFunc;
+  private data: any[];
 
   constructor(data, parserFunc) {
     this.data = data;
@@ -18,12 +18,12 @@ export default class CSVMaker {
 
     let header = columns.join(",");
 
-    let csvString = header;
+    const csvRows = [];
 
     csvData.forEach((csvRowData) => {
       const csvRow = csvRowData.map((aData) => Object.values(aData)[0]).join(",");
-      csvString = [csvString, csvRow].join("\n");
+      csvRows.push(csvRow);
     });
-    return csvString;
+    return [header, ...csvRows].join("\n");
   }
 }

@@ -1,7 +1,7 @@
 import Booking from "./Booking";
 
 export default class BookingWithDiscount {
-  static FARE_CLASS_DISCOUNT_CODE_MAPPING: { [key: string]: string } = {
+  private static FARE_CLASS_DISCOUNT_CODE_MAPPING: { [key: string]: string } = {
     A: "OFFER_20",
     B: "OFFER_20",
     C: "OFFER_20",
@@ -30,7 +30,7 @@ export default class BookingWithDiscount {
   }
 
   calculateDiscount(): string {
-    const discountCode = BookingWithDiscount.FARE_CLASS_DISCOUNT_CODE_MAPPING[this.booking.fareClass.value];
+    const discountCode = BookingWithDiscount.FARE_CLASS_DISCOUNT_CODE_MAPPING[this.booking.fareClass.value as string];
 
     return discountCode || "";
   }
