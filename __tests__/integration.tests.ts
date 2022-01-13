@@ -1,11 +1,12 @@
 import Booking from "../src/models/Booking";
-import BookingValidator from "../src/utils/BookingValidator";
+import FieldsValidator from "../src/utils/FieldsValidator";
 import { BookingCSVRow } from "../src/models/BookingCSV";
 import CSVReader from "../src/utils/CSVReader";
 import InvalidBooking from "../src/models/InvalidBooking";
 import BookingWithDiscount from "../src/models/BookingWithDiscount";
 import CSVMaker from "../src/utils/CSVMaker";
 import FileWriter from "../src/utils/FileWriter";
+import { BookingDiscountByFareClassCalculator } from "../src/utils/DiscountCalculator";
 
 const inputFilePath = "./input/bookings.csv";
 
@@ -32,10 +33,16 @@ beforeAll(async () => {
   );
 
   for (const booking of bookings) {
-    const bookingValidator = new BookingValidator(booking, ["pnr", "ticketingDate", "email", "phone", "cabin"]);
-    const validation = bookingValidator.validate();
+    const fieldsValidator = new FieldsValidator([
+      booking.pnr,
+      booking.ticketingDate,
+      booking.email,
+      booking.phone,
+      booking.cabin,
+    ]);
+    const validation = fieldsValidator.validate();
     if (validation.isValid === true) {
-      bookingsWithDiscount.push(new BookingWithDiscount(booking));
+      bookingsWithDiscount.push(new BookingWithDiscount(booking, new BookingDiscountByFareClassCalculator(booking)));
     } else {
       invalidBookings.push(new InvalidBooking(booking, validation.invalidReasons));
     }

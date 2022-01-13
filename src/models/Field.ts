@@ -4,7 +4,7 @@ type FieldValue = string | number | Date;
 export type FieldValidation = { isValid: true } | { isValid: false; invalidReason: string };
 
 interface FieldValidator {
-  invalidMessage: string;
+  readonly invalidMessage;
   validate(input: FieldValue): FieldValidation;
 }
 
@@ -12,11 +12,14 @@ export class EmailValidator implements FieldValidator {
   private emailRegex =
     /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
-  invalidMessage: string = "Email invalid";
+  readonly invalidMessage: string;
+  public static DEFAULT_INVALID_MESSAGE = "Email invalid";
 
   constructor(invalidMessage?: string) {
     if (invalidMessage) {
       this.invalidMessage = invalidMessage;
+    } else {
+      this.invalidMessage = EmailValidator.DEFAULT_INVALID_MESSAGE;
     }
   }
 
@@ -34,18 +37,21 @@ export class EmailValidator implements FieldValidator {
 }
 
 export class PhoneValidator implements FieldValidator {
-  private phoneRegex = /^[0-9]{10}$/g;
+  #phoneRegex = /^[0-9]{10}$/g;
 
-  invalidMessage: string = "Phone invalid";
+  readonly invalidMessage: string;
+  public static DEFAULT_INVALID_MESSAGE = "Phone invalid";
 
   constructor(invalidMessage?: string) {
     if (invalidMessage) {
       this.invalidMessage = invalidMessage;
+    } else {
+      this.invalidMessage = PhoneValidator.DEFAULT_INVALID_MESSAGE;
     }
   }
 
   validate(input: string): FieldValidation {
-    const isValid = this.phoneRegex.test(input);
+    const isValid = this.#phoneRegex.test(input);
     if (isValid) {
       return { isValid: true };
     }
@@ -58,17 +64,21 @@ export class PhoneValidator implements FieldValidator {
 }
 
 export class PNRValidator implements FieldValidator {
-  private pnrRegex = /^[A-Z0-9]{6}$/g;
-  invalidMessage: string = "PNR invalid";
+  #pnrRegex = /^[A-Z0-9]{6}$/g;
+
+  readonly invalidMessage: string;
+  public static DEFAULT_INVALID_MESSAGE = "PNR invalid";
 
   constructor(invalidMessage?: string) {
     if (invalidMessage) {
       this.invalidMessage = invalidMessage;
+    } else {
+      this.invalidMessage = PNRValidator.DEFAULT_INVALID_MESSAGE;
     }
   }
 
   validate(input: string): FieldValidation {
-    const isValid = this.pnrRegex.test(input);
+    const isValid = this.#pnrRegex.test(input);
     if (isValid) {
       return { isValid: true };
     }
@@ -81,11 +91,14 @@ export class PNRValidator implements FieldValidator {
 }
 
 export class CabinValidator implements FieldValidator {
-  invalidMessage: string = "Booked Cabin invalid";
+  readonly invalidMessage: string;
+  public static DEFAULT_INVALID_MESSAGE = "Booked Cabin invalid";
 
   constructor(invalidMessage?: string) {
     if (invalidMessage) {
       this.invalidMessage = invalidMessage;
+    } else {
+      this.invalidMessage = CabinValidator.DEFAULT_INVALID_MESSAGE;
     }
   }
 
@@ -102,18 +115,22 @@ export class CabinValidator implements FieldValidator {
   }
 }
 export class TicketingDateValidator implements FieldValidator {
-  invalidMessage: string = "Ticketing date invalid";
-  private travelDate: Date;
+  readonly invalidMessage: string;
+  public static DEFAULT_INVALID_MESSAGE = "Ticketing date invalid";
+
+  #travelDate: Date;
 
   constructor(travelDate: Date, invalidMessage?: string) {
     if (invalidMessage) {
       this.invalidMessage = invalidMessage;
+    } else {
+      this.invalidMessage = TicketingDateValidator.DEFAULT_INVALID_MESSAGE;
     }
-    this.travelDate = travelDate;
+    this.#travelDate = travelDate;
   }
 
   validate(input: Date): FieldValidation {
-    const isBeforeTravelDate = input < this.travelDate;
+    const isBeforeTravelDate = input < this.#travelDate;
 
     if (isBeforeTravelDate) {
       return { isValid: true };
@@ -127,17 +144,23 @@ export class TicketingDateValidator implements FieldValidator {
 }
 
 export class Field {
-  value: FieldValue;
-  validator: FieldValidator;
+  #value: FieldValue;
+  #validator: FieldValidator;
 
   constructor(value: FieldValue, validator?: FieldValidator) {
-    this.value = value;
-    this.validator = validator;
+    this.#value = value;
+    this.#validator = validator;
   }
 
-  validate() {
-    if (this.validator) {
-      return this.validator.validate(this.value);
+  validate(): FieldValidation {
+    if (this.#validator) {
+      return this.#validator.validate(this.#value);
+    } else {
+      return { isValid: true };
     }
+  }
+
+  public get value(): FieldValue {
+    return this.#value;
   }
 }
